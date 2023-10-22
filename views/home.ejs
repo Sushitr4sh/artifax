@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>artifax</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/stylesheets/output.css" />
+    <link rel="stylesheet" href="/stylesheets/custom.css" />
+    <style>
+      body {
+        background-image: radial-gradient(#262626 2px, transparent 0);
+        background-size: 20px 20px;
+        background-position: -19px -19px;
+      }
+    </style>
+
+    <!-- Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body
+    class="mobileScreen flex flex-col bg-[#171717] md:h-screen"
+    style="font-family: Inter, sans-serif"
+  >
+    <!-- <video
+      playsinline
+      autoplay
+      muted
+      loop
+      class="absolute -z-50 h-full w-screen object-cover"
+    >
+      <source src="/videos/light-leak-2.mp4" type="video/webm" />
+    </video> -->
+
+    <nav
+      class="flex items-center justify-between bg-[#171717]/30 px-8 py-6 text-white shadow-xl backdrop-blur-sm md:border-none md:px-16 lg:h-[10vh] lg:px-28"
+    >
+      <div class="flex items-end gap-x-2 lg:items-center">
+        <img src="/images/logo.png" class="w-5" />
+        <a href="/" class="flex items-center gap-x-2 font-semibold md:text-2xl">
+          <p class="leading-none">artifax.</p>
+        </a>
+      </div>
+      <% if(currentUser){ %>
+      <a href="/chats" class="font-semibold text-emerald-500"
+        ><%= currentUser.username %></a
+      >
+      <% } %>
+    </nav>
+
+    <main class="my-16 lg:col-span-2">
+      <p
+        class="mx-auto w-[85%] text-4xl font-bold leading-[3rem] text-white md:text-6xl lg:w-[45%] lg:text-center"
+      >
+        Where Vision is Forged and Art is
+        <span class="type" style="--n: 3; --d: 1.5s">
+          <span>
+            <span class="text-gradient text-left">Unleashed</span>
+            <span class="text-gradient text-left">Liberated</span>
+            <span class="text-gradient text-left">Cultivated</span>
+          </span>
+        </span>
+      </p>
+      <p
+        class="mx-auto mt-4 w-[85%] text-left text-lg text-accentLight3 md:text-xl md:font-bold lg:text-center"
+      >
+        Bringing your creative ideas to life.
+      </p>
+    </main>
+
+    <section class="mx-auto my-auto w-[85%] lg:w-[40%]">
+      <p class="text-center text-xl font-bold text-white">Get started</p>
+      <% if(currentUser){ %>
+      <div class="mt-4 font-medium">
+        <a
+          href="/chats"
+          class="bg-gradient flex w-full justify-center rounded-md py-2"
+        >
+          <p class="text-white">Chat</p>
+        </a>
+      </div>
+      <% } else {%>
+      <div class="mt-4 font-medium">
+        <a
+          href="/login"
+          class="bg-gradient flex w-full justify-center rounded-md py-2"
+        >
+          <p class="text-white">Log in</p>
+        </a>
+        <a
+          href="/signup"
+          class="mt-2 flex w-full justify-center rounded-md bg-white/30 py-2 backdrop-blur-sm transition duration-150 ease-in lg:hover:bg-white/50"
+        >
+          <p class="text-white">Sign up</p>
+        </a>
+      </div>
+      <% } %>
+    </section>
+
+    <footer class="mb-6 mt-auto lg:col-span-3">
+      <p class="text-center text-sm font-medium text-accentLight2">
+        &copy; 2023 Amogus Team.
+      </p>
+    </footer>
+
+    <!-- JavaScripts -->
+    <script src="/javascripts/custom.js"></script>
+  </body>
+</html>

@@ -1,0 +1,56 @@
+<% if(error && error.length) { %>
+<p class="mt-4 text-red-400"><%= error %></p>
+<% } %> <% if(idError && idError.length) { %>
+
+<div
+  class="fixed top-0 z-30 mt-20 flex w-full justify-between rounded-lg bg-red-600 px-4 py-3 text-white opacity-100"
+  id="alert"
+>
+  <p class="font-medium"><%= idError %></p>
+  <button id="btn-close">
+    <img src="/images/plus.png" class="w-4 rotate-45" />
+  </button>
+</div>
+<% } %> <% if(success && success.length) { %>
+
+<div
+  class="fixed top-0 z-30 mt-20 flex w-full justify-between rounded-lg bg-green-600 px-4 py-3 text-white opacity-100"
+  id="alert"
+>
+  <p class="font-medium"><%= success %></p>
+  <button id="btn-close">
+    <img src="/images/plus.png" class="w-4 rotate-45" />
+  </button>
+</div>
+<% } %>
+
+<script>
+  const alert = document.querySelector("#alert");
+  const btn = document.querySelector("#btn-close");
+  if (btn) {
+    btn.addEventListener("click", (e) => {
+      while (alert.hasChildNodes()) {
+        alert.removeChild(alert.firstChild);
+      }
+      alert.remove();
+    });
+  }
+</script>
+
+<style>
+  @keyframes slideInFromTop {
+    0% {
+      transform: translateY(-100%);
+      opacity: 0%;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 100%;
+    }
+  }
+
+  #alert {
+    /* This section calls the slideInFromLeft animation we defined above */
+    animation: 0.5s ease-in-out 0s 1 slideInFromTop;
+  }
+</style>

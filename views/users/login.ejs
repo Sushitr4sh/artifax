@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>artifax</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="/stylesheets/output.css" />
+    <link rel="stylesheet" href="/stylesheets/custom.css" />
+    <style>
+      body {
+        background-image: radial-gradient(#262626 2px, transparent 0);
+        background-size: 20px 20px;
+        background-position: -19px -19px;
+      }
+    </style>
+
+    <!-- Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body
+    class="mobileScreen flex w-full flex-col items-center justify-center bg-[#171717] lg:h-screen"
+    style="font-family: Inter, sans-serif"
+  >
+    <nav
+      class="absolute top-0 flex w-full items-center justify-between bg-[#171717]/30 px-8 py-6 text-white shadow-xl backdrop-blur-sm md:border-none md:px-16 lg:h-[10vh] lg:px-28"
+    >
+      <div class="flex items-end gap-x-2 lg:items-center">
+        <img src="/images/logo.png" class="w-5" />
+        <a href="/" class="flex items-center gap-x-2 font-semibold md:text-2xl">
+          <p class="leading-none">artifax.</p>
+        </a>
+      </div>
+      <% if(currentUser){ %>
+      <a href="/chats" class="font-semibold text-emerald-500"
+        ><%= currentUser.username %></a
+      >
+      <% } %>
+    </nav>
+
+    <p class="text-3xl font-bold text-white">Welcome back</p>
+    <form
+      action="/login"
+      method="POST"
+      class="mt-4 w-[85%] rounded-2xl border border-[#4a4a4a] bg-[#171717] px-4 py-4 text-white lg:w-[30%]"
+    >
+      <div>
+        <input
+          type="text"
+          name="username"
+          id="username"
+          class="w-full rounded-lg border border-[#3a3a3a] bg-transparent px-3 py-2 transition duration-150 ease-in focus:border-sky-500 focus:outline-none"
+          placeholder="Email address"
+        />
+        <input
+          type="password"
+          name="password"
+          id="password"
+          class="mt-2 w-full rounded-lg border border-[#3a3a3a] bg-transparent px-3 py-2 transition duration-150 ease-in focus:border-sky-500 focus:outline-none"
+          placeholder="Password"
+        />
+        <%- include('../partials/flash') %>
+        <button
+          type="submit"
+          class="mt-6 flex w-full justify-center rounded-md bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% py-2 font-medium"
+        >
+          <p class="text-white">Log in</p>
+        </button>
+      </div>
+
+      <p class="mt-4 text-center text-sm">
+        Don't have an account?
+        <a class="text-emerald-500" href="signup">Sign up</a>
+      </p>
+
+      <div class="my-6 flex items-center gap-x-4">
+        <div class="w-full border-b border-[#3a3a3a]"></div>
+        <p class="text-sm">OR</p>
+        <div class="w-full border-b border-[#3a3a3a]"></div>
+      </div>
+
+      <div>
+        <a
+          href="/chats/playground"
+          class="mt-2 flex w-full items-center justify-center rounded-lg bg-white/30 px-3 py-2 backdrop-blur-sm transition duration-150 ease-in hover:bg-white/50"
+        >
+          <p class="text-center font-medium">Continue as guest</p>
+        </a>
+      </div>
+    </form>
+
+    <!-- JavaScripts -->
+    <script src="/javascripts/custom.js"></script>
+  </body>
+</html>

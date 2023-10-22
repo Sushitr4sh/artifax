@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>artifax</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/stylesheets/output.css" />
+
+    <!-- Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body
+    class="flex h-screen flex-col bg-[#2a2a2a]"
+    style="font-family: Inter, sans-serif"
+  >
+    <nav
+      class="fixed top-0 z-20 grid w-full grid-cols-3 border-b border-accentLight bg-[#2a2a2a] px-8 py-4 text-white"
+    >
+      <img
+        src="/images/hamburger.png"
+        class="w-6 cursor-pointer"
+        onclick="toggleSlideOver()"
+      />
+      <div class="flex justify-center">
+        <a href="/" class="flex items-center">
+          <p class="text-center font-bold">VISUALIZE</p>
+        </a>
+      </div>
+    </nav>
+
+    <!-- Slide Over -->
+    <div
+      id="slideover-container"
+      class="invisible fixed left-0 z-50 h-full w-[85%] lg:w-[30%]"
+    >
+      <div
+        id="slideover"
+        class="absolute left-0 h-full w-full -translate-x-full rounded-br-3xl rounded-tr-3xl bg-dark/30 backdrop-blur-3xl transition-all duration-300 ease-out"
+      >
+        <div class="flex h-full flex-col justify-between overflow-y-scroll">
+          <div class="p-5">
+            <div class="mb-4 flex items-center gap-x-2">
+              <a
+                href="/chats/new"
+                class="flex grow items-center gap-x-2 rounded-lg border border-accentLight2 px-3 py-1 text-white"
+                id="newChat"
+              >
+                <img src="/images/plus.png" class="w-3" />
+                <p class="">New Chat</p>
+              </a>
+              <div
+                onclick="toggleSlideOver()"
+                class="left-0 top-0 flex h-8 w-8 cursor-pointer items-center justify-center text-emerald-500"
+              >
+                <svg
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="3"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </div>
+            </div>
+            <% for (let chat of chats){ %>
+            <div class="mb-1 flex items-center gap-x-4">
+              <div class="grow border-b border-accentLight3"></div>
+              <p class="text-center text-white"><%= chat.relativeTime %></p>
+              <div class="grow border-b border-accentLight3"></div>
+            </div>
+            <a
+              href="/chats/<%= chat._id %>"
+              class="mb-2 flex justify-between rounded-lg bg-white/10 px-3 py-2 text-white transition duration-150 ease-in hover:bg-white/30"
+            >
+              <p><%= chat.title %></p>
+              <div class="flex items-center gap-x-2">
+                <!-- <form action="/chat/<%= chat._id %>>_method=PUT"></form> -->
+                <div class="flex items-center gap-x-2">
+                  <form
+                    action="/chats/<%= chat._id %>?_method=DELETE"
+                    method="POST"
+                    class="z-20 flex items-center"
+                  >
+                    <button type="submit">
+                      <img src="/images/delete.png" class="w-4" srcset="" />
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </a>
+            <% } %>
+
+            <form action="/logout" method="POST" class="mt-4">
+              <p class="text-sm text-white">
+                Logged in as: <br />
+                <span class="text-xl font-bold text-emerald-500"
+                  ><%= currentUser.username %></span
+                >
+              </p>
+              <button
+                type="submit"
+                class="mt-2 flex w-full justify-center rounded-md bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% py-2"
+              >
+                <p class="text-white">Log out</p>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="my-auto">
+      <div
+        class="mb-4 flex flex-col items-center text-center text-3xl text-white"
+      >
+        <p class="font-bold">New Chat</p>
+        <p
+          class="mt-2 w-[60%] text-center text-base font-extralight leading-none"
+        >
+          Make a new container to serves as your chat log
+        </p>
+      </div>
+      <div
+        onclick="toggleSlideOver2()"
+        class="flex cursor-pointer justify-center"
+      >
+        <div
+          class="mx-4 flex w-[50%] items-center justify-center rounded-md bg-gradient-to-br from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% py-12 shadow-xl lg:w-[20%]"
+        >
+          <img src="/images/plus.png" class="w-[50%] lg:w-[40%]" />
+        </div>
+      </div>
+    </div>
+
+    <%- include('../partials/flash') %>
+
+    <script>
+      function toggleSlideOver() {
+        document
+          .getElementById("slideover-container")
+          .classList.toggle("invisible");
+        document
+          .getElementById("slideover")
+          .classList.toggle("-translate-x-full");
+      }
+
+      function toggleSlideOver2() {
+        const newChat = document.querySelector("#newChat");
+        newChat.classList.add(
+          "border-emerald-500",
+          "transition",
+          "duration-[1000ms]",
+          "ease-in",
+        );
+        setTimeout(() => {
+          newChat.classList.remove("border-emerald-500");
+          newChat.classList.add(
+            "border-accentLight2",
+            "transition",
+            "duration-[500ms]",
+            "ease-in",
+          );
+        }, 2000); // 2000 milliseconds = 2 seconds
+
+        document
+          .getElementById("slideover-container")
+          .classList.toggle("invisible");
+        document
+          .getElementById("slideover")
+          .classList.toggle("-translate-x-full");
+      }
+    </script>
+  </body>
+</html>
