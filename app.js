@@ -121,7 +121,8 @@ const LocalStrategy = require("passport-local");
 
 /* Helmet */
 
-const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/viziforge";
+/* process.env.DB_URL || */
+const dbUrl = "mongodb://127.0.0.1:27017/viziforge";
 
 main().catch((err) => console.log(err));
 async function main() {
@@ -240,12 +241,15 @@ app.post(
 );
 
 app.get("/chats/playground", async (req, res) => {
-  res.render("chats/playground");
+  const { image } = req.query;
+  res.render("chats/playground", { image });
 });
 
 app.post("/chats/playground", async (req, res) => {
   const jsonResponse = await invokeLambda(req.body.textChat);
   const data = JSON.parse(jsonResponse);
+  const image = data.url;
+  res.redirect(`/chats/playground?image=${image}`);
 });
 
 app.get(

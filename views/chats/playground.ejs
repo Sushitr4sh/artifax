@@ -36,45 +36,67 @@
       <a href="/chats" class="font-semibold text-emerald-500"
         ><%= currentUser.username %></a
       >
+      <% } else {%>
+      <div class="flex w-[50%] gap-x-2 lg:w-[20%]">
+        <a
+          href="/login"
+          class="bg-gradient flex w-full justify-center rounded-md py-1 lg:py-2"
+        >
+          <p class="text-sm text-white lg:text-base">Log in</p>
+        </a>
+        <a
+          href="/signup"
+          class="flex w-full justify-center rounded-md bg-white/30 py-1 backdrop-blur-sm transition duration-150 ease-in lg:py-2 lg:hover:bg-white/50"
+        >
+          <p class="text-sm text-white lg:text-base">Sign up</p>
+        </a>
+      </div>
       <% } %>
     </nav>
 
-    <main class="mx-auto w-[85%] text-white">
-      <P>Powered by:</P>
-      <p class="text-3xl font-bold">STABLE DIFFUSION XL</p>
-      <p class="font-medium">SDXL 1.0: A Leap Forward in AI Image Generation</p>
+    <main
+      class="mx-auto w-[85%] text-white sm:w-[40%] lg:flex lg:w-[50%] lg:gap-x-8"
+    >
+      <div class="lg:w-full">
+        <P>Powered by:</P>
+        <p class="text-3xl font-bold">STABLE DIFFUSION XL</p>
+        <p class="font-medium">
+          SDXL 1.0: A Leap Forward in AI Image Generation
+        </p>
+        <p class="mt-6 lg:mt-4">
+          Convert your <span class="font-bold text-sky-500">prompt</span> to
+          <span class="font-bold text-emerald-500">image</span>!
+        </p>
+        <form
+          action="/chats/playground"
+          method="POST"
+          class="mt-2 w-full rounded-lg bg-[#4a4a4a] p-3"
+        >
+          <input
+            type="text"
+            name="textChat"
+            id="textChat"
+            placeholder="Enter your prompt"
+            class="rounded-lg bg-[#4a4a4a] p-2 font-semibold focus:outline-none"
+          />
+          <button
+            type="submit"
+            class="flex w-full justify-center rounded-md bg-sky-500 py-2 font-medium"
+          >
+            <p>Generate</p>
+          </button>
+        </form>
+      </div>
 
       <section
-        class="mx-auto mt-8 flex aspect-square w-full items-center justify-center rounded-lg bg-white/30 p-4 text-white backdrop-blur-sm"
+        class="mx-auto mt-4 flex aspect-square w-full items-center justify-center rounded-lg bg-white/30 p-4 text-white backdrop-blur-sm"
       >
-        <!-- <p>Your image will be displayed here</p> -->
-        <img
-          src="https://s3.amazonaws.com/stabled.response/blue+bmw+racing+a+yellow+ferrari+car_d1647731-117.png"
-          alt=""
-          srcset=""
-          class="rounded-lg"
-        />
+        <% if(image === "") { %>
+        <p>Your image will be displayed here</p>
+        <% } else { %>
+        <img src="<%= image %>" alt="" srcset="" class="rounded-lg" />
+        <% } %>
       </section>
-
-      <form
-        action="/chats/playground"
-        method="POST"
-        class="mt-4 w-full rounded-lg bg-[#4a4a4a] p-3"
-      >
-        <input
-          type="text"
-          name="textChat"
-          id="textChat"
-          placeholder="Enter your prompt"
-          class="rounded-lg bg-[#4a4a4a] p-2 font-semibold focus:outline-none"
-        />
-        <button
-          type="submit"
-          class="flex w-full justify-center rounded-md bg-sky-500 py-2 font-medium"
-        >
-          <p>Generate</p>
-        </button>
-      </form>
     </main>
     <!-- JavaScripts -->
     <script src="/javascripts/custom.js"></script>

@@ -8,6 +8,13 @@
     <!-- CSS -->
     <link rel="stylesheet" href="/stylesheets/output.css" />
     <link rel="stylesheet" href="/stylesheets/custom.css" />
+    <style>
+      body {
+        background-image: radial-gradient(#262626 2px, transparent 0);
+        background-size: 20px 20px;
+        background-position: -19px -19px;
+      }
+    </style>
 
     <!-- Font -->
     <link
@@ -16,23 +23,30 @@
     />
   </head>
   <body
-    class="mobileScreen flex flex-col bg-dark"
+    class="mobileScreen flex w-full flex-col items-center justify-center bg-[#171717] lg:h-screen"
     style="font-family: Inter, sans-serif"
   >
     <nav
-      class="flex items-center justify-between border-b border-accentLight px-8 py-6 text-white"
+      class="absolute top-0 flex w-full items-center justify-between bg-[#171717]/30 px-8 py-6 text-white shadow-xl backdrop-blur-sm md:border-none md:px-16 lg:h-[10vh] lg:px-28"
     >
-      <a href="/" class="flex items-center gap-x-2 font-semibold">
-        <p>viziforge</p>
-      </a>
+      <div class="flex items-end gap-x-2 lg:items-center">
+        <img src="/images/logo.png" class="w-5" />
+        <a href="/" class="flex items-center gap-x-2 font-semibold md:text-2xl">
+          <p class="leading-none">artifax.</p>
+        </a>
+      </div>
       <% if(currentUser){ %>
-      <p class="font-semibold text-emerald-500"><%= currentUser.username %></p>
+      <a href="/chats" class="font-semibold text-emerald-500"
+        ><%= currentUser.username %></a
+      >
       <% } %>
     </nav>
 
     <section class="my-auto">
-      <p class="text-center text-6xl font-bold text-sky-500">Oops!</p>
-      <p class="mt-2 text-center text-lg text-white">
+      <p class="text-center text-6xl font-bold text-sky-500 lg:text-9xl">
+        Oops!
+      </p>
+      <p class="mt-2 text-center text-lg text-white lg:mt-4">
         <%= err.statusCode %> - <%= err.message %>
       </p>
       <p class="mx-auto mt-2 w-[85%] text-center text-sm text-accentLight3">
@@ -40,15 +54,15 @@
       </p>
       <a
         href="/"
-        class="mx-auto mt-4 flex w-[85%] justify-center rounded-md bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% py-2"
+        class="mx-auto mt-4 flex w-[85%] justify-center rounded-md bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% py-2 lg:w-[30%]"
       >
         <p class="text-white">GO TO HOMEPAGE</p>
       </a>
     </section>
 
-    <footer class="my-6 mt-auto">
+    <footer class="mb-6 mt-auto">
       <p class="text-center text-sm font-medium text-accentLight2">
-        Copyright &copy; 2023 Amogus Inc. All rights reserved
+        &copy; 2023 Amogus Team.
       </p>
     </footer>
 
