@@ -7,6 +7,28 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="/stylesheets/output.css" />
+    <style>
+      /* ===== Scrollbar CSS ===== */
+      /* Firefox */
+      * {
+        scrollbar-width: thin;
+        scrollbar-color: #34d399;
+      }
+
+      /* Chrome, Edge, and Safari */
+      *::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      *::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      *::-webkit-scrollbar-thumb {
+        background-color: #34d399;
+        border-radius: 10px;
+      }
+    </style>
 
     <!-- Font -->
     <link
@@ -24,7 +46,7 @@
       <img
         src="/images/hamburger.png"
         class="w-6 cursor-pointer"
-        onclick="toggleSlideOver()"
+        id="hamburger"
       />
       <div class="flex justify-center">
         <a href="/" class="flex items-center">
@@ -54,7 +76,7 @@
                 <p class="">New Chat</p>
               </a>
               <div
-                onclick="toggleSlideOver()"
+                id="hamburger-close"
                 class="left-0 top-0 flex h-8 w-8 cursor-pointer items-center justify-center text-emerald-500"
               >
                 <svg
@@ -131,10 +153,7 @@
           Make a new container to serves as your chat log
         </p>
       </div>
-      <div
-        onclick="toggleSlideOver2()"
-        class="flex cursor-pointer justify-center"
-      >
+      <div id="hamburger-2" class="flex cursor-pointer justify-center">
         <div
           class="mx-4 flex w-[50%] items-center justify-center rounded-md bg-gradient-to-br from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% py-12 shadow-xl lg:w-[20%]"
         >
@@ -145,41 +164,7 @@
 
     <%- include('../partials/flash') %>
 
-    <script>
-      function toggleSlideOver() {
-        document
-          .getElementById("slideover-container")
-          .classList.toggle("invisible");
-        document
-          .getElementById("slideover")
-          .classList.toggle("-translate-x-full");
-      }
-
-      function toggleSlideOver2() {
-        const newChat = document.querySelector("#newChat");
-        newChat.classList.add(
-          "border-emerald-500",
-          "transition",
-          "duration-[1000ms]",
-          "ease-in",
-        );
-        setTimeout(() => {
-          newChat.classList.remove("border-emerald-500");
-          newChat.classList.add(
-            "border-accentLight2",
-            "transition",
-            "duration-[500ms]",
-            "ease-in",
-          );
-        }, 2000); // 2000 milliseconds = 2 seconds
-
-        document
-          .getElementById("slideover-container")
-          .classList.toggle("invisible");
-        document
-          .getElementById("slideover")
-          .classList.toggle("-translate-x-full");
-      }
-    </script>
+    <!-- JavaScripts -->
+    <script src="/javascripts/chats/index.js"></script>
   </body>
 </html>

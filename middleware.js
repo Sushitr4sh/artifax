@@ -31,7 +31,7 @@ module.exports.isAuthor = async (req, res, next) => {
         ),
       );
     }
-    next();
+    return next();
   } else {
     req.flash("idError", `Unable to load conversation ${id}`);
     return res.redirect("/chats");

@@ -31,7 +31,6 @@
       }
     </style>
 
-    <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <!-- Font -->
@@ -47,7 +46,7 @@
       <img
         src="/images/hamburger.png"
         class="w-6 cursor-pointer"
-        onclick="toggleSlideOver()"
+        id="hamburger"
       />
       <div class="flex justify-center">
         <a href="/" class="flex items-center">
@@ -63,15 +62,13 @@
         class="absolute inset-0 h-full w-full bg-black opacity-0 transition-all duration-500 ease-out"
       ></div>
       <div
-        id="popup"
         class="absolute bottom-0 left-0 right-0 top-0 m-auto flex w-[85%] translate-x-full items-center lg:w-[30%]"
       >
         <div class="w-full rounded-lg bg-[#2a2a2a] p-4">
           <div class="flex items-center justify-between">
             <p class="text-3xl font-bold text-white">Edit Prompt</p>
             <div
-              onclick="togglePopUp()"
-              class="left-0 top-0 flex h-8 w-8 cursor-pointer items-center justify-center text-emerald-500"
+              class="popup-close left-0 top-0 flex h-8 w-8 cursor-pointer items-center justify-center text-emerald-500"
             >
               <svg
                 class="h-6 w-6"
@@ -135,7 +132,7 @@
                 <p>New Chat</p>
               </a>
               <div
-                onclick="toggleSlideOver()"
+                id="hamburger-close"
                 class="left-0 top-0 flex h-8 w-8 cursor-pointer items-center justify-center text-emerald-500"
               >
                 <svg
@@ -226,8 +223,10 @@
             <p class="mt-1 text-white"><%= prompt.textChat %></p>
             <img
               src="/images/editing.png"
-              class="mt-[0.4rem] w-4 cursor-pointer"
-              onclick="togglePopUp('<%= prompt.textChat %>', '<%= currentChat._id %>', '<%= prompt._id %>')"
+              class="popup mt-[0.4rem] w-4 cursor-pointer"
+              data-textChat="<%= prompt.textChat %>"
+              data-currentChatId="<%= currentChat._id %>"
+              data-promptId="<%= prompt._id %>"
             />
           </div>
         </div>
@@ -272,7 +271,9 @@
       <% } %>
     </main>
     <% } else {%>
-    <aside class="absolute bottom-0 left-0 right-0 mx-auto mb-24 w-[95%]">
+    <aside
+      class="absolute bottom-0 left-0 right-0 mx-auto mb-24 w-[95%] lg:w-[38%]"
+    >
       <p class="px-2 text-xl font-black text-emerald-500">- Hint -</p>
       <div
         class="mt-2 rounded-lg border border-accentLight2 px-2 py-3 text-white"
@@ -311,37 +312,7 @@
 
     <%- include('../partials/flash') %>
 
-    <script>
-      function toggleSlideOver() {
-        document
-          .getElementById("slideover-container")
-          .classList.toggle("invisible");
-        document
-          .getElementById("slideover")
-          .classList.toggle("-translate-x-full");
-      }
-
-      function togglePopUp(textChat, currentChatId, promptId) {
-        const editTextChat = document.getElementById("editTextChat");
-        editTextChat.value = textChat;
-
-        const editTextChatForm = document.getElementById("editTextChatForm");
-        editTextChatForm.action = `/chats/${currentChatId}/prompts/${promptId}?_method=PUT`;
-
-        document
-          .getElementById("popup-container")
-          .classList.toggle("invisible");
-        document.getElementById("popup-bg").classList.toggle("opacity-0");
-        document.getElementById("popup-bg").classList.toggle("opacity-50");
-        document.getElementById("popup").classList.toggle("translate-x-full");
-      }
-    </script>
-
-    <script>
-      $(window).on("load", function () {
-        $(".loader-wrapper").fadeOut("slow");
-        $("body").removeClass("preload");
-      });
-    </script>
+    <!-- JavaScripts -->
+    <script src="/javascripts/chats/chat.js"></script>
   </body>
 </html>

@@ -88,6 +88,8 @@ const mongoose = require("mongoose");
 
 const methodOverride = require("method-override");
 
+const helmet = require("helmet");
+
 const path = require("path");
 
 const moment = require("moment");
@@ -115,14 +117,10 @@ const MongoStore = require("connect-mongo");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
-/* Routers */
+/* mongoSanitize*/
+const mongoSanitize = require("express-mongo-sanitize");
 
-/* NoSQL Injection - mongoSanitize*/
-
-/* Helmet */
-
-/* process.env.DB_URL || */
-const dbUrl = "mongodb://127.0.0.1:27017/viziforge";
+const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/artifax";
 
 main().catch((err) => console.log(err));
 async function main() {
@@ -133,6 +131,7 @@ async function main() {
 /* View Engine */
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
 /* Middleware etc */
 const {
@@ -142,15 +141,15 @@ const {
   validateChat,
   validatePrompt,
 } = require("./middleware");
-app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
+app.use(mongoSanitize());
 
 const secret = "VISUALFORGE";
 const store = MongoStore.create({
-  mongoUrl: "mongodb://127.0.0.1:27017/viziforge",
+  mongoUrl: dbUrl,
   touchAfter: 24 * 60 * 60,
   crypto: {
     secret,
@@ -159,6 +158,7 @@ const store = MongoStore.create({
 store.on("error", function (e) {
   console.log(e);
 });
+
 app.use(
   session({
     store,
@@ -172,7 +172,35 @@ app.use(
     },
   }),
 );
+
 app.use(flash());
+
+app.use(helmet());
+const scriptSrcUrls = [
+  "https://code.jquery.com/",
+  "https://fonts.googleapis.com/",
+];
+const styleSrcUrls = ["https://fonts.googleapis.com/"];
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: [],
+      connectSrc: ["'self'"],
+      scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+      styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+      workerSrc: ["'self'", "blob:"],
+      objectSrc: [],
+      imgSrc: [
+        "'self'",
+        "blob:",
+        "data:",
+        "https://s3.amazonaws.com/stabled.response/",
+      ],
+    },
+  }),
+);
+
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
@@ -200,9 +228,9 @@ app.post(
     failureFlash: true,
     failureRedirect: "/login",
   }),
-  catchAsync(async (req, res) => {
+  (req, res) => {
     res.redirect("/chats");
-  }),
+  },
 );
 
 app.post("/logout", isLoggedIn, (req, res, next) => {
@@ -240,17 +268,20 @@ app.post(
   }),
 );
 
-app.get("/chats/playground", async (req, res) => {
+app.get("/chats/playground", (req, res) => {
   const { image } = req.query;
   res.render("chats/playground", { image });
 });
 
-app.post("/chats/playground", async (req, res) => {
-  const jsonResponse = await invokeLambda(req.body.textChat);
-  const data = JSON.parse(jsonResponse);
-  const image = data.url;
-  res.redirect(`/chats/playground?image=${image}`);
-});
+app.post(
+  "/chats/playground",
+  catchAsync(async (req, res) => {
+    const jsonResponse = await invokeLambda(req.body.textChat);
+    const data = JSON.parse(jsonResponse);
+    const image = data.url;
+    res.redirect(`/chats/playground?image=${image}`);
+  }),
+);
 
 app.get(
   "/chats",
@@ -273,11 +304,11 @@ app.get(
   }),
 );
 
-app.get("/chats/new", isLoggedIn, async (req, res) => {
+app.get("/chats/new", isLoggedIn, (req, res) => {
   res.render("chats/new");
 });
 
-app.get("/chats/:id/edit", isLoggedIn, async (req, res) => {
+app.get("/chats/:id/edit", isLoggedIn, (req, res) => {
   res.render("chats/edit");
 });
 
@@ -302,43 +333,56 @@ app.get(
   }),
 );
 
-app.post("/chats", isLoggedIn, validateChat, async (req, res) => {
-  const chat = new Chat(req.body);
-  chat.author = req.user._id;
-  await chat.save();
-  res.redirect(`/chats/${chat._id}`);
-});
+app.post(
+  "/chats",
+  isLoggedIn,
+  validateChat,
+  catchAsync(async (req, res) => {
+    const chat = new Chat(req.body);
+    chat.author = req.user._id;
+    await chat.save();
+    res.redirect(`/chats/${chat._id}`);
+  }),
+);
 
-app.delete("/chats/:id", async (req, res) => {
-  const { id } = req.params;
-  const chat = await Chat.findByIdAndDelete(id).populate("prompts");
-  const extractedFileNames = chat.prompts.map((prompt) => ({
-    Key: prompt.responseFileName,
-  }));
-  await deleteMultipleObject(extractedFileNames);
-  res.redirect("/chats");
-});
+app.delete(
+  "/chats/:id",
+  catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const chat = await Chat.findByIdAndDelete(id).populate("prompts");
+    const extractedFileNames = chat.prompts.map((prompt) => ({
+      Key: prompt.responseFileName,
+    }));
+    await deleteMultipleObject(extractedFileNames);
+    res.redirect("/chats");
+  }),
+);
 
-app.post("/chats/:id/prompts", isLoggedIn, validatePrompt, async (req, res) => {
-  const { id } = req.params;
-  const chat = await Chat.findById(id);
-  const prompt = new Prompt(req.body);
-  const jsonResponse = await invokeLambda(req.body.textChat);
-  const data = JSON.parse(jsonResponse);
-  prompt.responseUrl = data.url;
-  prompt.responseFileName = data.filename;
-  prompt.author = req.user._id;
-  chat.prompts.push(prompt);
-  await prompt.save();
-  await chat.save();
-  res.redirect(`/chats/${id}`);
-});
+app.post(
+  "/chats/:id/prompts",
+  isLoggedIn,
+  validatePrompt,
+  catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const chat = await Chat.findById(id);
+    const prompt = new Prompt(req.body);
+    const jsonResponse = await invokeLambda(req.body.textChat);
+    const data = JSON.parse(jsonResponse);
+    prompt.responseUrl = data.url;
+    prompt.responseFileName = data.filename;
+    prompt.author = req.user._id;
+    chat.prompts.push(prompt);
+    await prompt.save();
+    await chat.save();
+    res.redirect(`/chats/${id}`);
+  }),
+);
 
 app.put(
   "/chats/:id/prompts/:promptId",
   isLoggedIn,
   validatePrompt,
-  async (req, res) => {
+  catchAsync(async (req, res) => {
     const { id, promptId } = req.params;
     const prompt = await Prompt.findByIdAndUpdate(promptId, {
       textChat: req.body.textChat,
@@ -350,21 +394,25 @@ app.put(
     prompt.responseFileName = data.filename;
     await prompt.save();
     res.redirect(`/chats/${id}`);
-  },
+  }),
 );
 
-app.delete("/chats/:id/prompts/:promptId", isLoggedIn, async (req, res) => {
-  const { id, promptId } = req.params;
-  const prompt = await Prompt.findByIdAndDelete(promptId);
-  await deleteObject(prompt.responseFileName);
-  req.flash("success", "Successfully deleted prompt");
-  res.redirect(`/chats/${id}`);
-});
+app.delete(
+  "/chats/:id/prompts/:promptId",
+  isLoggedIn,
+  catchAsync(async (req, res) => {
+    const { id, promptId } = req.params;
+    const prompt = await Prompt.findByIdAndDelete(promptId);
+    await deleteObject(prompt.responseFileName);
+    req.flash("success", "Successfully deleted prompt");
+    res.redirect(`/chats/${id}`);
+  }),
+);
 
 app.put(
   "/chats/:id/prompts/:promptId/response",
   isLoggedIn,
-  async (req, res) => {
+  catchAsync(async (req, res) => {
     const { id, promptId } = req.params;
     const prompt = await Prompt.findById(promptId);
     await deleteObject(prompt.responseFileName);
@@ -374,7 +422,7 @@ app.put(
     prompt.responseFileName = data.filename;
     await prompt.save();
     res.redirect(`/chats/${id}`);
-  },
+  }),
 );
 
 /* 404 */

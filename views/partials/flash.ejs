@@ -3,7 +3,7 @@
 <% } %> <% if(idError && idError.length) { %>
 
 <div
-  class="fixed top-0 z-30 mt-20 flex w-full justify-between rounded-lg bg-red-600 px-4 py-3 text-white opacity-100"
+  class="fixed top-0 z-30 mt-20 flex w-full justify-between rounded-lg bg-red-600 px-4 py-3 text-white opacity-100 lg:left-0 lg:right-0 lg:mx-auto lg:w-[40%]"
   id="alert"
 >
   <p class="font-medium"><%= idError %></p>
@@ -14,7 +14,7 @@
 <% } %> <% if(success && success.length) { %>
 
 <div
-  class="fixed top-0 z-30 mt-20 flex w-full justify-between rounded-lg bg-green-600 px-4 py-3 text-white opacity-100"
+  class="fixed top-0 z-30 mt-20 flex w-full justify-between rounded-lg bg-green-600 px-4 py-3 text-white opacity-100 lg:left-0 lg:right-0 lg:mx-auto lg:w-[40%]"
   id="alert"
 >
   <p class="font-medium"><%= success %></p>
