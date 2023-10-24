@@ -28,6 +28,7 @@ popupElements.forEach(function (popupElement) {
     document.getElementById("popup-container").classList.toggle("invisible");
     document.getElementById("popup-bg").classList.toggle("opacity-0");
     document.getElementById("popup-bg").classList.toggle("opacity-50");
+    document.getElementById("popup").classList.toggle("translate-x-full");
   });
 });
 
@@ -37,6 +38,7 @@ popupCloseElements.forEach(function (popupCloseElement) {
     document.getElementById("popup-container").classList.toggle("invisible");
     document.getElementById("popup-bg").classList.toggle("opacity-0");
     document.getElementById("popup-bg").classList.toggle("opacity-50");
+    document.getElementById("popup").classList.toggle("translate-x-full");
   });
 });
 
