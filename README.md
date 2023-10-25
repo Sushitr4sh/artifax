@@ -200,7 +200,7 @@ Below list some way of how you can access/run this project:
 
 * Access via Hosted URL:
 
-   You can view a hosted instance of this project by visiting the following URL: : https://artifax-ejqoji1mv-sushitr4sh.vercel.app/
+   You can view a hosted instance of this project by visiting the following URL: : https://artifax-g2l4jt0rq-sushitr4sh.vercel.app/
 
    If you're experiencing this kind of error when exploring the hosted version of this project:
 
