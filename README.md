@@ -289,4 +289,11 @@ If you want to run the project outside of the provided hosted database, and you'
    ```sh
    db.users.find()
    ```
+* **AWS Service Access:**
+
+   If you wish to access the Lambda Function Code that are invoked to create the image based on user prompt, sign-in as IAM user on AWS user using this account:
+
+   ![IAM Account](https://res.cloudinary.com/dysmngiix/image/upload/v1698225716/YelpCamp/WhatsApp_Image_2023-10-11_at_09.25.04_9850dcc2_ilaejh.jpg)
+
+   Search for Lambda service, and on function tabs, you can see the lambda function called "access-bedrock-fm-1".
   
