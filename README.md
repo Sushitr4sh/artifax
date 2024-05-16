@@ -244,56 +244,5 @@ Below list some way of how you can access/run this project:
     
     This command will include all the classes found in your EJS document and remove any classes that are not present in the project.
 
-## Resouce Access
 
-* **Database Acess:**
-
-  Because this project MongoDB database is hosted trhough Mongo Atlas, if you want to access it we've grant an access to HackadayHackathon2022@gmail.com.
-
-  * Open your email, and accept the invite send by MongoDB
-  * Go to https://www.mongodb.com/cloud/atlas/register, and register or sign-in using your account.
-  * After a successful sign-in, select project0 and navigate to the "Database" option within the side navigation bar, located under the "DEPLOYMENT" tab.
-  * You will find "cluster0," which houses our MongoDB database collections.
-  * Choose the "Browse Collection" option, and you'll see chats, prompts, sessions, and users collection. Select any of these collections to view their contents.
-  
-If you want to run the project outside of the provided hosted database, and you've already had MongoDB installed locally on your machine, you can run the project with separate database:
-
-1. Delete the first value of dbUrl variable inside of app.js to not use process.env.DB_URL because it will connect the database to the hosted version, and instead use a local mongo connection provided.
-
-2. Run following command to start mongo server:
-
-   ```sh
-   mongod
-   ```
-
-3. Start mongo shell:
-
-   ```sh
-   mongosh
-   ```
-
-4. On mongo shell type the following command:
-
-   ```sh
-   use artifax
-   ```
-
-5. If you've already registered a user, make some chats and send a view prompts then you can see all the available collections using the following command:
-
-   ```sh
-   show collections
-   ```
-
-6. To see what stored inside of each collections, for example user, you can run the following command:
-
-   ```sh
-   db.users.find()
-   ```
-* **AWS Service Access:**
-
-   If you wish to access the Lambda Function Code that are invoked to create the image based on user prompt, sign-in as IAM user on AWS user using this account:
-
-   ![IAM Account](https://res.cloudinary.com/dysmngiix/image/upload/v1698225716/YelpCamp/WhatsApp_Image_2023-10-11_at_09.25.04_9850dcc2_ilaejh.jpg)
-
-   Search for Lambda service, and on function tabs, you can see the lambda function called "access-bedrock-fm-1".
   
